@@ -20,6 +20,8 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
 
   mapping (address => uint256) public etherBalances;
   mapping (address => bool) public ICDClaims;
+  mapping (address => uint256) public referrals;
+  mapping (address => bool) public bonusReceived;
 
 
   uint256 public regStartTime = 1519848000; // 28 feb 2018 20:00 GMT
@@ -88,6 +90,18 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
     etherBalances[_to] = _to.balance;
     Transfer(address(0), _to, _amount);
     return true;
+  }
+
+  function claimTwitterBonus() external forICD {
+    require(balances[msg.sender] > 0 && !bonusReceived[msg.sender]);
+    bonusReceived[msg.sender] = true;
+    mintICD(msg.sender, multiplicator.mul(20));
+  }
+
+  function claimReferralBonus() external forICD {
+    require(referrals[msg.sender] > 0 && balances[msg.sender] > 0);
+    referrals[msg.sender] = 0;
+    mintICD(msg.sender, SafeMath.mul(referrals[msg.sender], multiplicator));
   }
 
   function computeReward(uint256 _amount) internal view returns(uint256) {
