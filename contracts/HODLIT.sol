@@ -70,7 +70,7 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
   }
 
   function registerEtherBalance(address _referral) external forRegistration {
-    require(msg.sender.balance > 0.1 ether);
+    require(msg.sender.balance > 0.1 ether && etherBalances[msg.sender] == 0);
     if (_referral != address(0) && referrals[_referral] < 20) {
       referrals[_referral]++;
     }
