@@ -22,7 +22,7 @@ contract('Hodl Incentive Token', accounts => {
   describe('#icd registration', () => {
     it('registerEtherBalance() should fail before regStartTime', async () => {
       try {
-        await hodlit.registerEtherBalance();
+        await hodlit.registerEtherBalance('0');
       } catch (error) {
         assert.throws(() => {
           console.log(`\tError successfully catched => ${error}`)
@@ -33,10 +33,10 @@ contract('Hodl Incentive Token', accounts => {
     it('registerEtherBalance() should succeed after regStartTime', async () => {
       await hodlit.setDevelopment(true);
       await hodlit.addDays(8);
-      await hodlit.registerEtherBalance({
+      await hodlit.registerEtherBalance('0', {
         from: web3.eth.accounts[0]
       });
-      await hodlit.registerEtherBalance({
+      await hodlit.registerEtherBalance('0', {
         from: web3.eth.accounts[1]
       });
       assert.isAbove(await hodlit.etherBalances.call(web3.eth.accounts[0]), 0);
@@ -44,7 +44,7 @@ contract('Hodl Incentive Token', accounts => {
     it('registerEtherBalance() should fail after regStopTime', async () => {
       await hodlit.addDays(7);
       try {
-        await hodlit.registerEtherBalance();
+        await hodlit.registerEtherBalance('0');
       } catch (error) {
         assert.throws(() => {
           console.log(`\tError successfully catched => ${error}`)
@@ -76,7 +76,7 @@ contract('Hodl Incentive Token', accounts => {
 
     it('registerEtherBalance() should fail after POHStopTime', async () => {
       try {
-        await hodlit.registerEtherBalance();
+        await hodlit.registerEtherBalance('0');
       } catch (error) {
         assert.throws(() => {
           console.log(`\tError successfully catched => ${error}`)
