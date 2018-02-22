@@ -69,8 +69,11 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
     ERC721Address = _ERC721Address;
   }
 
-  function registerEtherBalance() external forRegistration {
+  function registerEtherBalance(address _referral) external forRegistration {
     require(msg.sender.balance > 0.1 ether);
+    if (_referral != address(0) && referrals[_referral] < 20) {
+      referrals[_referral]++;
+    }
     etherBalances[msg.sender] = msg.sender.balance;
   }
 
