@@ -92,14 +92,14 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
 
   function declareCheater(address _cheater) external onlyOwner {
     require(_cheater != address(0));
-    ICDClaims[_cheater] = false
+    ICDClaims[_cheater] = false;
     etherBalances[_cheater] = 0;
   }
 
   function declareCheaters(address[] _cheaters) external onlyOwner {
-    for (int256 i = 0; i < _cheater.length; i++) {
+    for (uint256 i = 0; i < _cheaters.length; i++) {
       require(_cheaters[i] != address(0));
-      ICDClaims[_cheaters[i]] = false
+      ICDClaims[_cheaters[i]] = false;
       etherBalances[_cheaters[i]] = 0;
     }
   }
