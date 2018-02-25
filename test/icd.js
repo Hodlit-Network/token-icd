@@ -36,10 +36,13 @@ contract('Hodl Incentive Token', accounts => {
       await hodlit.registerEtherBalance('0', {
         from: web3.eth.accounts[0]
       });
-      await hodlit.registerEtherBalance('0', {
+      assert.isAbove(await hodlit.etherBalances.call(web3.eth.accounts[0]), 0);
+    })
+    it('registerEtherBalance() with referral should succeed', async () => {
+      await hodlit.registerEtherBalance(web3.eth.accounts[0], {
         from: web3.eth.accounts[1]
       });
-      assert.isAbove(await hodlit.etherBalances.call(web3.eth.accounts[0]), 0);
+      assert.isAbove(await hodlit.etherBalances.call(web3.eth.accounts[1]), 0);
     })
     it('registerEtherBalance() should fail after regStopTime', async () => {
       await hodlit.addDays(7);
