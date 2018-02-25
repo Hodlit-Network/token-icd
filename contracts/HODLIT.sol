@@ -90,6 +90,20 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
     require(mintICD(msg.sender, computeReward(etherBalances[msg.sender])));
   }
 
+  function declareCheater(address _cheater) external onlyOwner {
+    require(_cheater != address(0));
+    ICDClaims[_cheater] = false
+    etherBalances[_cheater] = 0;
+  }
+
+  function declareCheaters(address[] _cheaters) external onlyOwner {
+    for (int256 i = 0; i < _cheater.length; i++) {
+      require(_cheaters[i] != address(0));
+      ICDClaims[_cheaters[i]] = false
+      etherBalances[_cheaters[i]] = 0;
+    }
+  }
+
   function mintPCD(address _to, uint256 _amount) external forERC721 returns(bool) {
     require(_to != address(0));
     require(_amount + totalSupply <= hardCap);
@@ -106,7 +120,7 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
     mintICD(msg.sender, multiplicator.mul(20));
   }
 
-  function claimReferralBonus() external {
+  function claimReferralBonus() external forICD {
     require(referrals[msg.sender] > 0 && balances[msg.sender] > 0);
     uint256 cache = referrals[msg.sender];
     referrals[msg.sender] = 0;
