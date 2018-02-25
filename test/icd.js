@@ -129,31 +129,31 @@ contract('Hodl Incentive Token', accounts => {
       }
     })
   })
-  // describe('ERC721 MOCK', () => {
-  //   describe('#init checks', () => {
-  //     it('should deploy contract', async () => {
-  //       mock = await Mock.deployed();
-  //       assert.isAbove(await mock.hodlit.call(), 0);
-  //     })
-  //     it('setERC721Address() should assign ERC721 address', async () => {
-  //       await hodlit.setERC721Address(mock.address);
-  //       assert.isAbove(await hodlit.ERC721Address.call(), 0);
-  //     })
-  //     it('mintPCD() should fail before PCDStartTime', async () => {
-  //       try {
-  //         await mock.mintFor(web3.eth.accounts[3], new BigNumber(1000).times(multiplicator).toString());
-  //       } catch (error) {
-  //         assert.throws(() => {
-  //           console.log(`\tError successfully catched => ${error}`)
-  //           throw error
-  //         })
-  //       }
-  //     })
-  //     it('mintPCD() should succeed after PCDStartTime', async () => {
-  //       await hodlit.addDays(14);
-  //       await mock.mintFor(web3.eth.accounts[3], new BigNumber(1000).times(multiplicator).toString());
-  //       assert.isAbove(await hodlit.balanceOf.call(web3.eth.accounts[3]), 0)
-  //     })
-  //   })
-  // })
+  describe('ERC721 MOCK', () => {
+    describe('#init checks', () => {
+      it('should deploy contract', async () => {
+        mock = await Mock.deployed();
+        assert.isAbove(await mock.hodlit.call(), 0);
+      })
+      it('setERC721Address() should assign ERC721 address', async () => {
+        await hodlit.setERC721Address(mock.address);
+        assert.isAbove(await hodlit.ERC721Address.call(), 0);
+      })
+      it('mintPCD() should fail before PCDStartTime', async () => {
+        try {
+          await mock.mintFor(web3.eth.accounts[3], new BigNumber(1000).times(multiplicator).toString());
+        } catch (error) {
+          assert.throws(() => {
+            console.log(`\tError successfully catched => ${error}`)
+            throw error
+          })
+        }
+      })
+      it('mintPCD() should succeed after PCDStartTime', async () => {
+        await hodlit.addDays(14);
+        await mock.mintFor(web3.eth.accounts[3], new BigNumber(1000).times(multiplicator).toString());
+        assert.isAbove(await hodlit.balanceOf.call(web3.eth.accounts[3]), 0)
+      })
+    })
+  })
 })
