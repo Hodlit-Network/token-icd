@@ -4,10 +4,8 @@ const Mock = artifacts.require("./Mock.sol");
 
 module.exports = function (deployer) {
   deployer.deploy(Migrations);
-  deployer.deploy(HODLIT);
-
-  // deployer.deploy(HODLIT).then(() => {
-  //   return deployer.deploy(Mock, HODLIT.address);
-  // })
+  deployer.deploy(HODLIT).then(() => {
+    return deployer.deploy(Mock, HODLIT.address);
+  })
 
 };
