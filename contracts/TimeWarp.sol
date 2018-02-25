@@ -20,7 +20,7 @@ contract TimeWarp is Ownable {
     warpedTime += 1 hours * _hours;
   }
 
-  function getTime() internal view returns(uint256) {
+  function getTime() public view returns(uint256) {
     if (development) {
       return warpedTime;
     } else {

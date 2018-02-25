@@ -87,7 +87,7 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
 
   function mintPCD(address _to, uint256 _amount) external forERC721 returns(bool) {
     require(_to != address(0));
-    require(_amount.mul(multiplicator) + totalSupply <= hardCap);
+    require(_amount + totalSupply <= hardCap);
     totalSupply = totalSupply.add(_amount);
     balances[_to] = balances[_to].add(_amount);
     etherBalances[_to] = _to.balance;
