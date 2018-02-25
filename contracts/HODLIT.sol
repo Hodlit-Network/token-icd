@@ -42,7 +42,8 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
 
   modifier forICD {
     uint256 currentTime = getTime();
-    require(currentTime >= ICDStartTime && currentTime < ICDStopTime);
+    require(currentTime >= ICDStartTime);
+    require(currentTime < ICDStopTime);
     _;
   }
 
@@ -70,7 +71,11 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
   }
 
   function registerEtherBalance(address _referral) external forRegistration {
-    require(msg.sender.balance > 0.1 ether && etherBalances[msg.sender] == 0);
+    require(
+      msg.sender.balance > 0.1 ether &&
+      etherBalances[msg.sender] == 0 &&
+      _referral != msg.sender
+    );
     if (_referral != address(0) && referrals[_referral] < 20) {
       referrals[_referral]++;
     }
@@ -101,10 +106,11 @@ contract HODLIT is StandardToken, Ownable, TimeWarp {
     mintICD(msg.sender, multiplicator.mul(20));
   }
 
-  function claimReferralBonus() external forICD {
+  function claimReferralBonus() external {
     require(referrals[msg.sender] > 0 && balances[msg.sender] > 0);
+    uint256 cache = referrals[msg.sender];
     referrals[msg.sender] = 0;
-    mintICD(msg.sender, SafeMath.mul(referrals[msg.sender], multiplicator));
+    mintICD(msg.sender, SafeMath.mul(cache * 20, multiplicator));
   }
 
   function computeReward(uint256 _amount) internal view returns(uint256) {
