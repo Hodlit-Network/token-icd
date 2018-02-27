@@ -1,4 +1,4 @@
-const Hodlit = artifacts.require("./HODLIT.sol");
+const Hodlit = artifacts.require("./HODLIT_DEV.sol");
 const BigNumber = require('bignumber.js');
 const Mock = artifacts.require("./Mock.sol");
 

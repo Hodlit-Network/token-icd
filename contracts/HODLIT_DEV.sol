@@ -3,9 +3,12 @@ pragma solidity ^0.4.19;
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
 import "zeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./TimeWarp.sol";
 
+// TODO: add registered counter
+// TODO: add claimed counter
 
-contract HODLIT is StandardToken, Ownable {
+contract HODLIT_DEV is StandardToken, Ownable, TimeWarp {
   using SafeMath for uint256;
   string public name = "HODL INCENTIVE TOKEN";
   string public symbol = "HIT";
@@ -13,10 +16,6 @@ contract HODLIT is StandardToken, Ownable {
   uint256 public multiplicator = 10 ** decimals;
   uint256 public totalSupply;
   uint256 public ICDSupply;
-
-  uint256 public registeredUsers;
-  uint256 public claimedUsers;
-  uint256 public maxReferrals = 20;
 
   uint256 public hardCap = SafeMath.mul(100000000, multiplicator);
   uint256 public ICDCap = SafeMath.mul(20000000, multiplicator);
@@ -38,21 +37,26 @@ contract HODLIT is StandardToken, Ownable {
   address public ERC721Address;
 
   modifier forRegistration {
-    require(block.timestamp >= regStartTime && block.timestamp < regStopTime);
+    uint256 currentTime = getTime();
+    require(currentTime >= regStartTime && currentTime < regStopTime);
     _;
   }
 
   modifier forICD {
-    require(block.timestamp >= ICDStartTime && block.timestamp < ICDStopTime);
+    uint256 currentTime = getTime();
+    require(currentTime >= ICDStartTime);
+    require(currentTime < ICDStopTime);
     _;
   }
 
   modifier forERC721 {
-    require(msg.sender == ERC721Address && block.timestamp >= PCDStartTime);
+    uint256 currentTime = getTime();
+    require(msg.sender == ERC721Address);
+    require(currentTime >= PCDStartTime);
     _;
   }
 
-  function HODLIT() public {
+  function HODLIT_DEV() public {
     uint256 reserve = SafeMath.mul(30000000, multiplicator);
     owner = msg.sender;
     totalSupply = totalSupply.add(reserve);
@@ -68,20 +72,15 @@ contract HODLIT is StandardToken, Ownable {
     ERC721Address = _ERC721Address;
   }
 
-  function setMaxReferrals(uint256 _maxReferrals) external onlyOwner {
-    maxReferrals = _maxReferrals;
-  }
-
   function registerEtherBalance(address _referral) external forRegistration {
     require(
-      msg.sender.balance > 0.2 ether &&
+      msg.sender.balance > 0.1 ether &&
       etherBalances[msg.sender] == 0 &&
       _referral != msg.sender
     );
-    if (_referral != address(0) && referrals[_referral] < maxReferrals) {
+    if (_referral != address(0) && referrals[_referral] < 20) {
       referrals[_referral]++;
     }
-    registeredUsers++;
     etherBalances[msg.sender] = msg.sender.balance;
   }
 
@@ -90,7 +89,6 @@ contract HODLIT is StandardToken, Ownable {
     require(etherBalances[msg.sender] > 0);
     require(etherBalances[msg.sender] <= msg.sender.balance + 50 finney);
     ICDClaims[msg.sender] = true;
-    claimedUsers++;
     require(mintICD(msg.sender, computeReward(etherBalances[msg.sender])));
   }
 
